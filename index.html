@@ -6,291 +6,309 @@
     <title>Results</title>
     <style>
         :root {
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-size-base: 14px;
             --font-size-table: 13px;
+            --primary-color: #333;
+            --border-color: #ddd;
+            --bg-alt: #fafafa;
+            --bg-header: #f5f5f5;
+            --bg-hover: #f0f7ff;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: var(--font-family);
             font-size: var(--font-size-base);
             line-height: 1.6;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px auto 40px auto;
-            font-size: var(--font-size-table);
-        }
-
-        table th,
-        table td {
-            border: 1px solid #ddd;
-            padding: 10px 14px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #f5f5f5;
-            font-weight: 600;
-            color: #333;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        table tr:hover {
-            background-color: #f0f7ff;
-        }
-
-        a {
-            color: #2975d1;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            padding: 15px;
+            color: var(--primary-color);
         }
 
         .section-title {
             text-align: center;
             font-weight: 600;
             margin: 30px 0 15px 0;
-            color: #333;
+            font-size: 1.2rem;
         }
 
-        @media (max-width: 600px) {
+        .table-container {
+            width: 100%;
+            margin-bottom: 40px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-table);
+            min-width: 600px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--bg-header);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        table tr:nth-child(even) {
+            background-color: var(--bg-alt);
+        }
+
+        table tr:hover {
+            background-color: var(--bg-hover);
+        }
+
+        @media (max-width: 768px) {
             body {
                 padding: 10px;
             }
-            table th, table td {
-                padding: 8px 10px;
-                font-size: 12px;
+            .section-title {
+                font-size: 1.1rem;
+            }
+            table {
+                min-width: 700px;
             }
         }
     </style>
 </head>
 <body>
-    <h3><div class="section-title">Table A: Component-wise Contribution to Performance</div></h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Method</th>
-                <th>GenEval</th>
-                <th>Imagine-Bench</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>CoF-T2I (Ours)</td>
-                <td>0.86</td>
-                <td>7.468</td>
-            </tr>
-            <tr>
-                <td>w/o CoF trajectory (Target-only SFT)</td>
-                <td>0.81</td>
-                <td>6.755</td>
-            </tr>
-            <tr>
-                <td>w/o independent VAE decoding</td>
-                <td>0.83</td>
-                <td>7.104</td>
-            </tr>
-            <tr>
-                <td>w/o progressive structure</td>
-                <td>0.80</td>
-                <td>6.738</td>
-            </tr>
-            <tr>
-                <td>w/o causal ordering</td>
-                <td>0.77</td>
-                <td>6.352</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <h3><div class="section-title">Table B: CoF-Evol-Instruct Data Curation Statistics & Quantitative Transparency</div></h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Stage</th>
-                <th>Description</th>
-                <th>Input Volume</th>
-                <th>Output Volume</th>
-                <th>Attrition Rate</th>
-                <th>Quantitative Criteria / Safeguard</th>
-                <th>Primary Failure Mode / Distribution Breakdown</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Prompt Assembly & Deduplication</td>
-                <td>Multi-source prompt aggregation</td>
-                <td>73K</td>
-                <td>68K</td>
-                <td>6.8%</td>
-                <td>Exact prompt-level deduplication</td>
-                <td>Semantic duplication across the 3 external prompt sources, 5.0K removed</td>
-            </tr>
-            <tr>
-                <td>Multi-tier Anchor Generation</td>
-                <td>Capability stratification sampling</td>
-                <td>68K</td>
-                <td>68K</td>
-                <td>0%</td>
-                <td>Stochastic routing: Wan2.1 (25%) / Qwen-Image (50%) / Nano Banana (25%)</td>
-                <td>Zero attrition (Generative anchor initialization)</td>
-            </tr>
-            <tr>
-                <td>Quality-based Routing (Qwen3-VL-8B)</td>
-                <td>Deterministic 3-way stage assignment</td>
-                <td>68K</td>
-                <td>68K</td>
-                <td>0%</td>
-                <td>Categorical classification mapping: C1 (30%) / C2 (42%) / C3 (28%)</td>
-                <td>Zero attrition (Classification and routing step)</td>
-            </tr>
-            <tr>
-                <td>UEP Construction & Trajectory Filtering</td>
-                <td>Category-conditioned editing + Quality gating</td>
-                <td>68K</td>
-                <td>64K</td>
-                <td>5.9%</td>
-                <td>Qwen3-VL-32B binary verification score = 1.0 (Maximum K=3 retries)</td>
-                <td>4.0K rejected: Subject identity shifts (2.5K); Background alterations (1.1K); K=3 timeouts (0.4K)</td>
-            </tr>
-            <tr>
-                <td>Final CoF-Evol-Instruct</td>
-                <td>Progressive 3-frame trajectories</td>
-                <td>—</td>
-                <td>64K</td>
-                <td>Overall 12.3%</td>
-                <td>Semantic constraint distributions exactly preserved</td>
-                <td>Final validated dataset ready for training</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="section-title">Table A: Component-wise Contribution to Performance</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>GenEval</th>
+                    <th>Imagine-Bench</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CoF-T2I (Ours)</td>
+                    <td>0.86</td>
+                    <td>7.468</td>
+                </tr>
+                <tr>
+                    <td>w/o CoF trajectory (Target-only SFT)</td>
+                    <td>0.81</td>
+                    <td>6.755</td>
+                </tr>
+                <tr>
+                    <td>w/o independent VAE decoding</td>
+                    <td>0.83</td>
+                    <td>7.104</td>
+                </tr>
+                <tr>
+                    <td>w/o progressive structure</td>
+                    <td>0.80</td>
+                    <td>6.738</td>
+                </tr>
+                <tr>
+                    <td>w/o causal ordering</td>
+                    <td>0.77</td>
+                    <td>6.352</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h3><div class="section-title">Table C: Generalization Across Backbones</div></h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Backbone Model</th>
-                <th>GenEval</th>
-                <th>Imagine-Bench</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>HunyuanVideo-1.5</td>
-                <td>0.51</td>
-                <td>5.82</td>
-            </tr>
-            <tr>
-                <td>HunyuanVideo-1.5 + CoF (Ours)</td>
-                <td>0.84 (+0.33)</td>
-                <td>7.31 (+1.49)</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="section-title">Table B: CoF-Evol-Instruct Data Curation Statistics</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Description</th>
+                    <th>Input</th>
+                    <th>Output</th>
+                    <th>Attrition</th>
+                    <th>Criteria / Safeguard</th>
+                    <th>Failure Mode / Distribution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Prompt Assembly</td>
+                    <td>Multi-source aggregation</td>
+                    <td>73K</td>
+                    <td>68K</td>
+                    <td>6.8%</td>
+                    <td>Deduplication</td>
+                    <td>Semantic duplication (5.0K removed)</td>
+                </tr>
+                <tr>
+                    <td>Anchor Gen</td>
+                    <td>Capability sampling</td>
+                    <td>68K</td>
+                    <td>68K</td>
+                    <td>0%</td>
+                    <td>Wan2.1 / Qwen Image / Nano Banana</td>
+                    <td>Zero attrition</td>
+                </tr>
+                <tr>
+                    <td>Quality Routing</td>
+                    <td>Stage assignment</td>
+                    <td>68K</td>
+                    <td>68K</td>
+                    <td>0%</td>
+                    <td>C1(30%) / C2(42%) / C3(28%)</td>
+                    <td>Zero attrition</td>
+                </tr>
+                <tr>
+                    <td>UEP Construction</td>
+                    <td>Trajectory Filtering</td>
+                    <td>68K</td>
+                    <td>64K</td>
+                    <td>5.9%</td>
+                    <td>Qwen3-VL-32B Score = 1.0</td>
+                    <td>Identity shifts (2.5K); Background (1.1K); Failed (0.4K)</td>
+                </tr>
+                <tr>
+                    <td>Final Dataset</td>
+                    <td>3-frame trajectories</td>
+                    <td>—</td>
+                    <td>64K</td>
+                    <td>12.3%</td>
+                    <td>Semantic preservation</td>
+                    <td>Zero attrition</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h3><div class="section-title">Table: Out-of-Domain Generalization (TIIF-Bench)</div></h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Model</th>
-                <th>Reasoning</th>
-                <th>Attribute+Reasoning</th>
-                <th>Style</th>
-                <th>Text</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>SD3-Medium</td>
-                <td>74.07</td>
-                <td>70.34</td>
-                <td>76.67</td>
-                <td>20.83</td>
-            </tr>
-            <tr>
-                <td>Flux.1-dev</td>
-                <td>72.39</td>
-                <td>73.34</td>
-                <td>66.67</td>
-                <td>52.83</td>
-            </tr>
-            <tr>
-                <td>BAGEL</td>
-                <td>76.77</td>
-                <td>70.07</td>
-                <td>83.33</td>
-                <td>33.94</td>
-            </tr>
-            <tr>
-                <td>Janus-Pro-7B</td>
-                <td>79.07</td>
-                <td>70.84</td>
-                <td>70.00</td>
-                <td>33.83</td>
-            </tr>
-            <tr>
-                <td>CoF-T2I(Ours)</td>
-                <td>82.15</td>
-                <td>76.42</td>
-                <td>80.00</td>
-                <td>30.51</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="section-title">Table C: Generalization Across Backbones</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Backbone Model</th>
+                    <th>GenEval</th>
+                    <th>Imagine-Bench</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>HunyuanVideo-1.5</td>
+                    <td>0.51</td>
+                    <td>5.82</td>
+                </tr>
+                <tr>
+                    <td>HunyuanVideo-1.5 + CoF (Ours)</td>
+                    <td>0.84 (+0.33)</td>
+                    <td>7.31 (+1.49)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h3><div class="section-title">Table E: Generalization Across Resolutions</div></h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Resolution</th>
-                <th>Frame 1</th>
-                <th>Frame 2</th>
-                <th>Frame 3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>512 × 512</td>
-                <td>0.45</td>
-                <td>0.69</td>
-                <td>0.76</td>
-            </tr>
-            <tr>
-                <td>768 × 768</td>
-                <td>0.52</td>
-                <td>0.74</td>
-                <td>0.82</td>
-            </tr>
-            <tr>
-                <td>1024 × 1024 (Train)</td>
-                <td>0.56</td>
-                <td>0.79</td>
-                <td>0.86</td>
-            </tr>
-            <tr>
-                <td>1280 × 1280</td>
-                <td>0.50</td>
-                <td>0.75</td>
-                <td>0.84</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="section-title">Table D: Out-of-Domain Generalization (TIIF-Bench)</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Reasoning</th>
+                    <th>Attr+Reasoning</th>
+                    <th>Style</th>
+                    <th>Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SD3-Medium</td>
+                    <td>74.07</td>
+                    <td>70.34</td>
+                    <td>76.67</td>
+                    <td>20.83</td>
+                </tr>
+                <tr>
+                    <td>Flux.1-dev</td>
+                    <td>72.39</td>
+                    <td>73.34</td>
+                    <td>66.67</td>
+                    <td>52.83</td>
+                </tr>
+                <tr>
+                    <td>BAGEL</td>
+                    <td>76.77</td>
+                    <td>70.07</td>
+                    <td>83.33</td>
+                    <td>33.94</td>
+                </tr>
+                <tr>
+                    <td>Janus-Pro-7B</td>
+                    <td>79.07</td>
+                    <td>70.84</td>
+                    <td>70.00</td>
+                    <td>33.83</td>
+                </tr>
+                <tr>
+                    <td>CoF-T2I(Ours)</td>
+                    <td>82.15</td>
+                    <td>76.42</td>
+                    <td>80.00</td>
+                    <td>30.51</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-title">Table E: Generalization Across Resolutions</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Resolution</th>
+                    <th>Frame 1</th>
+                    <th>Frame 2</th>
+                    <th>Frame 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>512 × 512</td>
+                    <td>0.45</td>
+                    <td>0.69</td>
+                    <td>0.76</td>
+                </tr>
+                <tr>
+                    <td>768 × 768</td>
+                    <td>0.52</td>
+                    <td>0.74</td>
+                    <td>0.82</td>
+                </tr>
+                <tr>
+                    <td>1024 × 1024 (Train)</td>
+                    <td>0.56</td>
+                    <td>0.79</td>
+                    <td>0.86</td>
+                </tr>
+                <tr>
+                    <td>1280 × 1280</td>
+                    <td>0.50</td>
+                    <td>0.75</td>
+                    <td>0.84</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </body>
 </html>
